@@ -1,4 +1,4 @@
 ---
-title: Welcome to my blog
+title: Launch of Delyn's Midnight Tech Hacks
 ---
 
