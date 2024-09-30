@@ -1,6 +1,10 @@
 theme: minima
 title: Delyn's Tech Hacks
 author: Delyn Choong
+#this is how to do newline in Yaml, scalar block style
 description: |- 
   Repository for my tech learnings and POCs. Typical midnight programmer, so please overlook typos and formatting.
   It is after all, turtles all the way down...
+
+# Minima: show excerpts in the frontpage
+show_excerpts: true

@@ -9,3 +9,5 @@ layout: post
 **Hello world**, this is my first midnight hacks blog post.
 
 I hope you like it!
+
+![Image](2024-09-06-hello-world.md/assets/img/welcome.jpeg)
