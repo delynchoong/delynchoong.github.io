@@ -1,5 +1,6 @@
 theme: minima
 title: Delyn's Tech Hacks
 author: Delyn Choong
-description: Repository for my tech learnings and POCs. Typical midnight programmer, so please overlook typos and formatting.
-It is after all, turtles all the way down...
+description: |- 
+  Repository for my tech learnings and POCs. Typical midnight programmer, so please overlook typos and formatting.
+  It is after all, turtles all the way down...
