@@ -10,4 +10,4 @@ layout: post
 
 I hope you like it!
 
-![Image](2024-09-06-hello-world.md/assets/img/welcome.jpeg)
+![Image](/assets/img/welcome.jpeg)
