@@ -1,5 +1,5 @@
 ---
-johndoe:
+delynchoong:
    name: Delyn Choong
    username: delynchoong
    site: http://delynchoong.com

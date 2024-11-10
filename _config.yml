@@ -27,7 +27,7 @@ author: Delyn Choong
 author_bio: Welcome to Delyn's Midnight Tech Hacks
 author_website_url: "https://delynchoong.github.io"
 typewrite-text: A blog to store all my technical POCs, learnings and guides.
-hero_cover_img: welcomee_cover.jpeg # replace this for changing homepage cover (eg. try cover.jpeg). Image should be in /assets/img
+hero_cover_img: welcome_cover.jpeg # replace this for changing homepage cover (eg. try cover.jpeg). Image should be in /assets/img
 
 # Experiences
 author_work_experiences:
