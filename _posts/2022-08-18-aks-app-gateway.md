@@ -107,7 +107,7 @@ helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx && helm r
  kubectl get services --namespace ingress-basic
  ```  
 19.	The External IP should be assigned:
-![alt text](/assets/images/2022-08-18/4.png
+![alt text](/assets/images/2022-08-18/4.png)
 10.	Now create the applications in the service, in this example it will be saved as aks-helloworld-one.yaml.
 ``` ruby
 apiVersion: apps/v1
