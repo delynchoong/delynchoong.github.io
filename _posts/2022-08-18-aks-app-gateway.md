@@ -41,15 +41,18 @@ az aks update -g <resource group name> -n <private aks name> --attach-acr <acr n
 10.	Since this is a private AKS cluster, no internet traffic will be allowed to reach your cluster. To issue commands to your cluster, use the Az Command Invoke, a Jumpbox VM in the same virtual network as the AKS cluster, or use the Run Command from Azure Portal: https://learn.microsoft.com/en-us/azure/aks/access-private-cluster?tabs=azure-cli
 11.	The next command is run in Azure cloud shell (bash)
 12.	Attach the Azure container registry
+
 ```ruby
 az aks update -g <resource group name> -n <private aks name> --attach-acr <acr name>
-``` 
-1.  Login to your AKS cluster 
-``` ruby
+```
+
+13.  Login to your AKS cluster 
+```ruby
 az aks get-credentials --resource-group <resource group name> --name <aks name>
 ``` 
-1.  Pull the images from the registry
-``` ruby
+14.  Pull the images from the registry
+  
+```ruby
 REGISTRY_NAME=<Azure Container Registry name>
 SOURCE_REGISTRY=registry.k8s.io
 CONTROLLER_IMAGE=ingress-nginx/controller
@@ -62,20 +65,20 @@ DEFAULTBACKEND_TAG=1.5
 az acr import --name $REGISTRY_NAME --source $SOURCE_REGISTRY/$CONTROLLER_IMAGE:$CONTROLLER_TAG --image $CONTROLLER_IMAGE:$CONTROLLER_TAG
 az acr import --name $REGISTRY_NAME --source $SOURCE_REGISTRY/$PATCH_IMAGE:$PATCH_TAG --image $PATCH_IMAGE:$PATCH_TAG
 az acr import --name $REGISTRY_NAME --source $SOURCE_REGISTRY/$DEFAULTBACKEND_IMAGE:$DEFAULTBACKEND_TAG --image $DEFAULTBACKEND_IMAGE:$DEFAULTBACKEND_TAG
-```
- 
-15.  Check the available IP address in the subnet, use the Virtual network that you have configured previously.
+``` 
+15. Check the available IP address in the subnet, use the Virtual network that you have configured previously.
 
-``` ruby
+```ruby
 az network vnet subnet list-available-ips --resource-group <resource group name> --vnet-name <virtual network name> -n <subnet name>
+
 ```
 
 16. Now switch over to run the command from your AKS cluster in Azure Portal. Select “Run Command” from the left blade:
- ![alt text](/assets/images/2022-08-18/3.png)
+   ![alt text](/assets/images/2022-08-18/3.png)
 17. Run the command below to create Nginx Ingress Controller using helm and pull the image from the Azure Container Registry set up previously. Change the IP Address to one of the available IPs returned in step #15. Ensure azure-load-balancer-internal=true is set.
 Note: Use && to append your commands as run commands will not remember previous lines
 
-``` ruby
+```ruby
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx && helm repo update && ACR_URL=<Your ACR URL, including azurecr.io> && kubectl create namespace ingress-basic && helm install ingress-nginx ingress-nginx/ingress-nginx \
     --namespace ingress-basic \
     --set controller.replicaCount=2 \
@@ -102,13 +105,14 @@ helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx && helm r
 ```
  
 18. Wait for a few minutes for the new IP to be assigned. You can view this by running:
-``` ruby
+```ruby
  kubectl get services --namespace ingress-basic
  ```  
 19.	The External IP should be assigned:
 ![alt text](/assets/images/2022-08-18/4.png)
 20.	Now create the applications in the service, in this example it will be saved as aks-helloworld-one.yaml.
-``` ruby
+
+```ruby
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -144,9 +148,9 @@ spec:
     app: aks-helloworld-one
 
 ```
- 
+
 21.	Create another application called aks-helloworld-two.yaml
-``` ruby
+```ruby
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -183,7 +187,7 @@ spec:
 ```
 22.	Deploy the applications: 
 
-``` ruby
+```ruby
    kubectl apply -f aks-helloworld-one.yaml --namespace ingress-basic
   kubectl apply -f aks-helloworld-two.yaml --namespace ingress-basic
 
@@ -191,7 +195,7 @@ spec:
 ```
 
 23. Create a new file called hello-world-ingress.yaml to set up ingress routing:
-``` ruby
+```ruby
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -251,12 +255,12 @@ spec:
 
 ```
 24.	Deploy the ingress route file:
-``` ruby
+```ruby
    kubectl apply -f hello-world-ingress.yaml --namespace ingress-basic
 ```
  
 25.	View the Deployed ingress
-``` ruby
+```ruby
    kubectl get ingress -n ingress-basic
 ```
  ![alt text](/assets/images/2022-08-18/5.png)
@@ -266,7 +270,6 @@ spec:
 29.	Set backend pool to point to the External IP address that was set in Step #24
  ![alt text](/assets/images/2022-08-18/6.png)
 30.	Create backend settings and point to the custom domain:
-31.	 
 32.	Create the listener pointing to the custom domain and assign to the Frontend IP configuration 
 33.	Configure the rule for the backend pool and backend settings 
 34.	Leave other settings all as default or as needed. Save the App gateway.
