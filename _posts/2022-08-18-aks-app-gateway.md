@@ -10,47 +10,50 @@ tags:
 ---
 
 Guide on deploying Azure Kubernetes Service with manual installment of Nginx Ingress Controller, including routing to your own custom DNS
- 
-**Network Architecture**
+
+# Network Architecture
 
 Network architecture was set up similar to the architecture below. This guide focus on setting up only the Spoke Virtual Network.
 
  ![alt text](/assets/images/2022-08-18/1.png)
 The ingress traffic is routed from the hub Azure Firewall into the spoke network via Private IP of the Application Gateway and DNAT translation. For testing purposes in this guide, access the AKS service through the public IP of the Application Gateway. In production scenario, all traffic should be routed using only private IP of the App gateway with proper firewall rules applied.
 
-**Setup Guide**
+# Setup Guide
 
 **Nginx update:** A new managed Nginx Ingress Controller has been released, please deploy using this guide instead: [Azure AKS App Routing][aks-app-routing]
 {: .notice--primary}
 
 [aks-app-routing]: https://learn.microsoft.com/en-us/azure/aks/app-routing
 
+1. Using Azure Portal deploy AKS Private Cluster with CNI Network
+2. Do select _Bring your Own network in Network configurations_
+3. Connect an Azure Container Registry if required, or you can attach it later with this command:
 
-1.	Using Azure Portal deploy AKS Private Cluster with CNI Network
-2.	Do select _Bring your Own network in Network configurations_
-3.	Connect an Azure Container Registry if required, or you can attach it later with this command:
 ```ruby
 az aks update -g <resource group name> -n <private aks name> --attach-acr <acr name>
 ```
-5.	Configure the rest of the settings as you require.
+
+5. Configure the rest of the settings as you require.
  ![alt text](/assets/images/2022-08-18/2.png)
-6.	Click “Review + Create”
-7.	Validate the configurations and click “Create”
-8.	Wait until the deployment is complete.
-9.	Once deployment is finished, the next command can be run from Azure CLI or any CLI of your choice.
-10.	Since this is a private AKS cluster, no internet traffic will be allowed to reach your cluster. To issue commands to your cluster, use the Az Command Invoke, a Jumpbox VM in the same virtual network as the AKS cluster, or use the Run Command from Azure Portal: https://learn.microsoft.com/en-us/azure/aks/access-private-cluster?tabs=azure-cli
-11.	The next command is run in Azure cloud shell (bash)
-12.	Attach the Azure container registry
+6. Click “Review + Create”
+7. Validate the configurations and click “Create”
+8. Wait until the deployment is complete.
+9. Once deployment is finished, the next command can be run from Azure CLI or any CLI of your choice.
+10. Since this is a private AKS cluster, no internet traffic will be allowed to reach your cluster. To issue commands to your cluster, use the Az Command Invoke, a Jumpbox VM in the same virtual network as the AKS cluster, or use the Run Command from Azure Portal: <https://learn.microsoft.com/en-us/azure/aks/access-private-cluster?tabs=azure-cli>
+11. The next command is run in Azure cloud shell (bash)
+12. Attach the Azure container registry
 
 ```ruby
 az aks update -g <resource group name> -n <private aks name> --attach-acr <acr name>
 ```
 
-13.  Login to your AKS cluster 
+13. Login to your AKS cluster
+
 ```ruby
 az aks get-credentials --resource-group <resource group name> --name <aks name>
-``` 
-14.  Pull the images from the registry
+```
+
+14. Pull the images from the registry
   
 ```ruby
 REGISTRY_NAME=<Azure Container Registry name>
@@ -65,7 +68,8 @@ DEFAULTBACKEND_TAG=1.5
 az acr import --name $REGISTRY_NAME --source $SOURCE_REGISTRY/$CONTROLLER_IMAGE:$CONTROLLER_TAG --image $CONTROLLER_IMAGE:$CONTROLLER_TAG
 az acr import --name $REGISTRY_NAME --source $SOURCE_REGISTRY/$PATCH_IMAGE:$PATCH_TAG --image $PATCH_IMAGE:$PATCH_TAG
 az acr import --name $REGISTRY_NAME --source $SOURCE_REGISTRY/$DEFAULTBACKEND_IMAGE:$DEFAULTBACKEND_TAG --image $DEFAULTBACKEND_IMAGE:$DEFAULTBACKEND_TAG
-``` 
+```
+
 15. Check the available IP address in the subnet, use the Virtual network that you have configured previously.
 
 ```ruby
@@ -103,14 +107,16 @@ helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx && helm r
     --debug
 
 ```
- 
+
 18. Wait for a few minutes for the new IP to be assigned. You can view this by running:
+
 ```ruby
  kubectl get services --namespace ingress-basic
  ```  
-19.	The External IP should be assigned:
+
+19. The External IP should be assigned:
 ![alt text](/assets/images/2022-08-18/4.png)
-20.	Now create the applications in the service, in this example it will be saved as aks-helloworld-one.yaml.
+20. Now create the applications in the service, in this example it will be saved as aks-helloworld-one.yaml.
 
 ```ruby
 apiVersion: apps/v1
@@ -149,7 +155,8 @@ spec:
 
 ```
 
-21.	Create another application called aks-helloworld-two.yaml
+21. Create another application called aks-helloworld-two.yaml
+
 ```ruby
 apiVersion: apps/v1
 kind: Deployment
@@ -185,7 +192,8 @@ spec:
   selector:
 
 ```
-22.	Deploy the applications: 
+
+22. Deploy the applications:
 
 ```ruby
    kubectl apply -f aks-helloworld-one.yaml --namespace ingress-basic
@@ -195,6 +203,7 @@ spec:
 ```
 
 23. Create a new file called hello-world-ingress.yaml to set up ingress routing:
+
 ```ruby
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -254,29 +263,33 @@ spec:
               number: 80
 
 ```
-24.	Deploy the ingress route file:
+
+24. Deploy the ingress route file:
+
 ```ruby
    kubectl apply -f hello-world-ingress.yaml --namespace ingress-basic
 ```
- 
-25.	View the Deployed ingress
+
+25. View the Deployed ingress
+
 ```ruby
    kubectl get ingress -n ingress-basic
 ```
+
  ![alt text](/assets/images/2022-08-18/5.png)
-26.	Create App Gateway in Portal, use WAF v2 tier. For the purpose of this guide, App gateway was created with Both Private and Public IP. In production only private IP should be used.
-27.	In the settings, ensure it is in the same virtual network as the AKS cluster
-28.	Create a new subnet for the application gateway and configure app gateway to that subnet
-29.	Set backend pool to point to the External IP address that was set in Step #24
+26. Create App Gateway in Portal, use WAF v2 tier. For the purpose of this guide, App gateway was created with Both Private and Public IP. In production only private IP should be used.
+27. In the settings, ensure it is in the same virtual network as the AKS cluster
+28. Create a new subnet for the application gateway and configure app gateway to that subnet
+29. Set backend pool to point to the External IP address that was set in Step #24
  ![alt text](/assets/images/2022-08-18/6.png)
-30.	Create backend settings and point to the custom domain:
-32.	Create the listener pointing to the custom domain and assign to the Frontend IP configuration 
-33.	Configure the rule for the backend pool and backend settings 
-34.	Leave other settings all as default or as needed. Save the App gateway.
-35.	Now configure the Custom Domain name to point to the public IP of the application gateway (For the purpose of this guide a public IP is used, private IP should be used for production) 
-36.	Make sure to add in your domain registrar the new record for your Custom Domain with A record, and the Application Gateway Public IP
-37.	Then create a DNS Zone in Azure portal
-38.	Create a Record set:
-39.	Save the settings.
-40.	Finally go to the browser and navigate to the custom domain. You will be able to view your application
+30. Create backend settings and point to the custom domain:
+32. Create the listener pointing to the custom domain and assign to the Frontend IP configuration
+33. Configure the rule for the backend pool and backend settings
+34. Leave other settings all as default or as needed. Save the App gateway.
+35. Now configure the Custom Domain name to point to the public IP of the application gateway (For the purpose of this guide a public IP is used, private IP should be used for production)
+36. Make sure to add in your domain registrar the new record for your Custom Domain with A record, and the Application Gateway Public IP
+37. Then create a DNS Zone in Azure portal
+38. Create a Record set:
+39. Save the settings.
+40. Finally go to the browser and navigate to the custom domain. You will be able to view your application
  ![alt text](/assets/images/2022-08-18/7.png)
