@@ -1,5 +1,5 @@
 ---
-title: "Deploying Azure Kubernetes Service, Nginx Ingress Controller and Redirecting your Site with App Gateway"
+title: "Deploying Azure Kubernetes Service, Nginx Ingress Controller and Redirecting your custom Site with App Gateway"
 categories:
   - blog
 last_modified_at: 2023-010-09T16:20:02-05:00
@@ -9,7 +9,7 @@ tags:
   - Microservices
 ---
 
-
+Guide on deploying Azure Kubernetes Service with manual installment of Nginx Ingress Controller, including routing to your own custom DNS
  
 **Network Architecture**
 
@@ -44,12 +44,11 @@ az aks update -g <resource group name> -n <private aks name> --attach-acr <acr n
 ```ruby
 az aks update -g <resource group name> -n <private aks name> --attach-acr <acr name>
 ``` 
-
-1.  Login to your AKS cluster 
-```
+13. Login to your AKS cluster 
+``` ruby
 az aks get-credentials --resource-group <resource group name> --name <aks name>
 ``` 
-1.  Pull the images from the registry
+14. Pull the images from the registry
 ``` ruby
 REGISTRY_NAME=<Azure Container Registry name>
 SOURCE_REGISTRY=registry.k8s.io
@@ -65,7 +64,7 @@ az acr import --name $REGISTRY_NAME --source $SOURCE_REGISTRY/$PATCH_IMAGE:$PATC
 az acr import --name $REGISTRY_NAME --source $SOURCE_REGISTRY/$DEFAULTBACKEND_IMAGE:$DEFAULTBACKEND_TAG --image $DEFAULTBACKEND_IMAGE:$DEFAULTBACKEND_TAG
 ```
  
-15. Check the available IP address in the subnet, use the Virtual network that you have configured previously.
+15.  Check the available IP address in the subnet, use the Virtual network that you have configured previously.
 
 ``` ruby
 az network vnet subnet list-available-ips --resource-group <resource group name> --vnet-name <virtual network name> -n <subnet name>
@@ -108,7 +107,7 @@ helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx && helm r
  ```  
 19.	The External IP should be assigned:
 ![alt text](/assets/images/2022-08-18/4.png)
-10.	Now create the applications in the service, in this example it will be saved as aks-helloworld-one.yaml.
+20.	Now create the applications in the service, in this example it will be saved as aks-helloworld-one.yaml.
 ``` ruby
 apiVersion: apps/v1
 kind: Deployment
