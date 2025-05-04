@@ -1,5 +1,5 @@
 ---
-title: "Deploying Azure Kubernetes Service, Nginx Ingress Controller and Redirecting your custom Site with App Gateway"
+title: "Deploying Azure Kubernetes Service, Nginx and Redirecting your Custom Site with App Gateway"
 categories:
   - blog
 last_modified_at: 2023-010-09T16:20:02-05:00
@@ -44,11 +44,11 @@ az aks update -g <resource group name> -n <private aks name> --attach-acr <acr n
 ```ruby
 az aks update -g <resource group name> -n <private aks name> --attach-acr <acr name>
 ``` 
-13. Login to your AKS cluster 
+1.  Login to your AKS cluster 
 ``` ruby
 az aks get-credentials --resource-group <resource group name> --name <aks name>
 ``` 
-14. Pull the images from the registry
+1.  Pull the images from the registry
 ``` ruby
 REGISTRY_NAME=<Azure Container Registry name>
 SOURCE_REGISTRY=registry.k8s.io
