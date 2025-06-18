@@ -10,25 +10,31 @@ tags:
 
 ## Mastering Model Context Protocol(MCP): Building MultiServer MCP with Azure OpenAI
 
-The Model Context Protocol (MCP) is rapidly becoming the prominent framework for building truly agentic, interoperable AI applications. While there are several MCP templates online, this project stands out as the only starter template that combines **Azure OpenAI integration** with a **Multi-Server MCP** architecture on a custom interface, enabling you to connect and orchestrate multiple tool servers—through a customized user interface.
+The [Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction?wt.mc_id=studentamb_263805) is rapidly becoming the prominent framework for building truly agentic, interoperable AI applications.
 
-Many articles document MCP servers for single-server use, this project covers Multiserver MCP implementation, connect multiple MCP servers in a single client session through MultiServerMCP library from Langchain adapters, enabling agentic orchestration across different domains. While most triggers to OOB MCP servers leveraged Github Copilot for input, this project allows for custom app integration
+Many articles document MCP servers for single-server use, this project stands out as the starter template that combines **Multi-Server MCP** with Azure OpenAI integration on a custom interface, enabling you to connect and orchestrate multiple tool servers—through a customized UI.
+
+Here, we deep dive into Multiserver MCP implementation, connecting both local custom and ready MCP Servers in a single client session through the MultiServerMCP library from Langchain adapters, enabling agentic orchestration across different domains. While most triggers to OOB MCP servers leveraged Github Copilot for input, this project allows for custom app integration
 
 In this technical blog, we’ll walk through the architecture, components, and step-by-step code to build your own MultiServer MCP using the Langchain MCP adapter, FastAPI, and a custom frontend which also lists the loaded MCP tools. By the end, you’ll have a scalable, extensible agentic platform ready for expanding your real-world AI applications.
 
 ---
+
 ### Quick recap: Why is MCP important?
 
 ![alt text](/assets/images/2025-05-05/1.png)
-The Model Context Protocol (MCP) is important because it provides a standardized way for agents and AI applications to interact with a wide variety of tools and services, regardless of the programming language or platform. Think of it as the universal connector for AI agents.
+The Model Context Protocol (MCP) provides a standardized way for agents and AI applications to interact with a wide variety of tools and services, regardless of the programming language or platform. Think of it as the universal connector for AI
+applications.
+
+There are now several ready MCP servers available, such as [Azure AI Foundry](https://learn.microsoft.com/en-us/semantic-kernel/concepts/plugins/adding-mcp-plugins?pivots=programming-language-python) and [Azure MCP Server](https://github.com/Azure/azure-mcp), providing a rich ecosystem of existing tools that can be easily integrated into your applications.
 
 ### Why Multi Server MCP?
 
-As solutions evolve in the real-world and we approach complex workflows, we often need several specialised features – think scraping the web, querying a database, and editing files, all in one agent.
+As solutions evolve in the real-world and we approach complex workflows, we often need several specialised APIs, here, think of it as tools – functions like querying a database, editing files, getting information from websites - available all in one agent. MultiServer MCP allows you to connect and orchestrate these diverse tools seamlessly:
 
-- **Plug-and-play tool servers:** Connect custom and ready-made MCP servers (e.g., custom Math, custom Fabric, Azure AI Foundry, Azure, Claude).
+- **Plug-and-play tool servers:** Connect custom. remote and ready-made MCP servers (e.g., custom Math, custom Fabric, Azure AI Foundry, Azure, Claude).
 - **Interoperability:** Different AI tools can work together seamlessly.
-- **Agentic orchestration:** Enable your agent to reason, plan, and call tools across multiple specialized domains
+- **Agentic orchestration:** Enable your agent to reason, plan, and call tools across multiple specialized domains without defined routing.
 - **Azure OpenAI integration:** Leverage enterprise-grade LLMs and security.
 - **Scalability:** Easily add or remove tool servers without changing the agent code.
 
@@ -36,13 +42,14 @@ As solutions evolve in the real-world and we approach complex workflows, we ofte
 
 ## Architecture Overview
 
+![alt text](/assets/images/2025-05-05/4.png)
+
 **Key Components:**
 
-- **MCP Server:** A process exposing tools (functions) via the MCP protocol (stdio, TCP, etc.).
+- **MCP Server:** A process exposing tools (functions) via the MCP protocol (stdio, SSE, etc.).
 - **MCP Client:** Connects to one or more MCP servers, discovers tools, and enables agentic orchestration.
 - **Langchain MCP Adapter:** Bridges Langchain agents with MCP tools.
 - **FastAPI Backend:** Hosts the API and serves the frontend.
-- **Frontend:** Simple HTML/JS UI for user interaction.
 
 **Benefits:**  
 
@@ -51,13 +58,15 @@ As solutions evolve in the real-world and we approach complex workflows, we ofte
 - Seamless integration with LLMs and external APIs  
 - Scalable and secure (especially with Azure OpenAI)
 
-**Considerations:**
+## Key Files in This Project
 
-- Scaling is tricky, MCP exposed through SSE each requires a unique dedicated port exposed, which can create scalability challenges (here I'm using stdio for ease of startup).
-- Tool discovery is limited to the MCP servers registered in the client configuration.
-- Requires careful management of tool namespaces to avoid conflicts.
-- MCP client requires re-initialization to detect new servers or tools, challenge during runtime discovery.
-- Proper security definition for custom MCP Servers are still lacking.
+| File Name            | Purpose                                                      |
+|----------------------|--------------------------------------------------------------|
+| client.py            | Main client logic: connects to multiple MCP servers, handles tool discovery, and agent orchestration |
+| frontend_api.py      | FastAPI backend serving the custom frontend and API endpoints |
+| math_server.py       | Example custom MCP server exposing math tools                |
+| .vscode/mcp.json     | Configuration for registering MCP servers (local/remote)     |
+| frontend.html        | Custom HTML/JS frontend for user interaction                 |
 
 ---
 
@@ -65,7 +74,9 @@ As solutions evolve in the real-world and we approach complex workflows, we ofte
 
 ![alt text](/assets/images/2025-05-05/2.png)
 
-### 1. Import Langchain and MultiServer MCP
+
+
+### 1. Import Langchain and MultiServer MCP in client.py file
 
 ```python
 from langchain_openai import AzureChatOpenAI
@@ -73,7 +84,7 @@ from langchain_mcp_adapters.client import MultiServerMCPClient
 from langgraph.prebuilt import create_react_agent
 ```
 
-### 2. Create a FastAPI Frontend Application
+### 2. Create a FastAPI Frontend Application in frontend_api.py
 
 ```python
 from fastapi import FastAPI, Request
@@ -112,7 +123,7 @@ if __name__ == "__main__":
 
 ### 4. Import and Register Azure AI Foundry MCP Server
 
-Add the Azure AI Foundry server to your `.vscode/mcp.json`:
+Add the Azure AI Foundry server to your `.vscode/mcp.json`. Refer here for more configurations setting up the [Azure AI Foundry MCP Server](https://github.com/azure-ai-foundry/mcp-foundry).
 
 ```jsonc
 {
@@ -205,11 +216,16 @@ With this setup, you can:
 **Ready to build your own agentic platform? [Fork this repo](https://github.com/delynchoong/azure-openai-agent-multi-mcp-starter) and start connecting your own MCP tools today!**
 
 ## Additional Notes
+### 
+**Considerations:**
 
-If you prefer, you can also leverage virtual environment to store your environment variables.
-Suppose your project, Project A, is written against a specific version of library X. In the future, you might need to upgrade library X. Say, for example, you need the latest version for another project you started, called Project B. You upgrade library X to the latest version, and project B works fine. Great! But once you did this, it turns out your Project A code broke badly. After all, APIs can change significantly on major version upgrades.
-
-A virtual environment fixes this problem by isolating your project from other projects and system-wide packages. You install packages inside this virtual environment specifically for the project you are working on.
-
-Alternatively, this can be achieved using Github Codespaces.
-
+- Scaling is tricky, enterprise-ready MCP would be better exposed through SSE, however each endpoint requires a unique dedicated port exposed, which can create scalability challenges (here I'm using stdio for ease of startup).
+- Tool discovery is limited to the MCP servers registered in the client configuration.
+- Requires careful management of tool namespaces to avoid conflicts.
+- MCP client requires re-initialization to detect new servers or tools, challenge during runtime discovery.
+- Proper security definition for custom MCP Servers are still lacking.
+  
+**Recommendation:**
+- - ![alt text](/assets/images/2025-05-05/3.png)
+- Multi Server MCP and enterprise-level solutions should leverage [APIM as auth gateway to MCP](https://techcommunity.microsoft.com/blog/integrationsonazureblog/azure-api-management-your-auth-gateway-for-mcp-servers/4402690) and [MCP Plugin for Semantic Kernel](https://learn.microsoft.com/en-us/semantic-kernel/concepts/plugins/adding-mcp-plugins?pivots=programming-language-python).
+- If you prefer, you can also use virtual environments to store your environment variables.
