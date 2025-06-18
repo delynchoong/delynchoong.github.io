@@ -1,5 +1,5 @@
 ---
-title: "Azure MCP Tutorial"
+title: "Mastering Model Context Protocol(MCP): Building MultiServer MCP with Azure OpenAI"
 categories:
   - blog
 tags:
