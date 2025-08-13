@@ -22,7 +22,6 @@ Manufacturers are under pressure to increase yield, reduce scrap, and accelerate
 
 ![alt text](/assets/images/2025-08-14/1.png)
 
----
 
 ## 1. Manufacturing Value Proposition of AI Vision
 
@@ -32,8 +31,6 @@ Strategic gains:
 - Quality Intelligence: Mine "reason" strings to uncover recurring defect modes earlier.
 - Traceability: Attach decision metadata to MES / digital thread for full genealogy.
 - Cost Optimization: Defer capex-heavy classical systems until scale warrants hybridization.
-
----
 
 ## 2. Repository Overview & Flow
 
@@ -66,13 +63,11 @@ passed/               # Classified good images
 - Structured Output: Reduces brittle regex parsing; fosters machine-consumable defect logs.
 - Minimal State: Pure functions + side-effectful file moves = straightforward scaling path.
 
----
-
 ## 3. Deep Dive: Core Files
 
 ### `app.py`
 
-- UI sections: Upload, Inspect, Galleries.
+F UI sections: Upload, Inspect, Galleries.
 - After visualizing inference result, immediately moves images (idempotence relies on unique UUID filenames).
 - Sidebar surfaces environment sanity (deployment name, API key presence) for rapid debugging.
 
@@ -94,9 +89,7 @@ passed/               # Classified good images
 
 - (Not expanded here) scaffolds Azure OpenAI, Storage, and an App Service baseline.
 - Intended path: integrate Managed Identity & assign least-privileged roles (Blob Data Contributor, etc.).
-
----
-
+  
 ## 4. Operational & Scalability Considerations
 
 | Dimension | Current Prototype | Scale Path |
@@ -107,8 +100,6 @@ passed/               # Classified good images
 | Governance | .env secrets | Key Vault + Managed Identity + RBAC |
 | Model Adaptation | Prompt tweaks | Feedback loop storing false positives/negatives for fine-tuning |
 | Throughput | Human-paced | Batch or streaming microservice behind REST / gRPC |
-
----
 
 ## 5. Forward-Looking: Hypothetical GPT‑5 Capabilities (Clearly Labeled Speculation)
 
@@ -133,8 +124,6 @@ A future agent loop could:
 4. Execute: Only after passing validation emit changes (gated by human approval event).
 5. Log: Structured telemetry event for audit trail.
 
----
-
 ## 6. Responsible AI & Governance
 
 | Concern | Mitigation |
@@ -143,8 +132,6 @@ A future agent loop could:
 | Drift (lighting, camera) | Periodic validation set; monitor confidence distribution shifts |
 | Data Privacy | Keep images in secure storage with role-based access; rotate keys / use MI |
 | Over-Reliance | Maintain human-in-the-loop for low-confidence or novel defect classes |
-
----
 
 ## 7. Enhancement Backlog (Actionable)
 
@@ -155,8 +142,6 @@ A future agent loop could:
 5. Blob Storage adapter; feature flag via `STORAGE_MODE=blob`.
 6. Edge caching of model results keyed by image hash to prevent duplicate cost.
 7. Add `pytest` suite with a mock Vision client to assert routing logic.
-
----
 
 ## 8. Getting Started (Quick)
 
@@ -170,16 +155,12 @@ streamlit run app.py
 
 Upload images, observe triage, inspect `error/` vs `passed/`.
 
----
-
 ## 9. Strategic Takeaways
 
 - Lightweight LLM-first prototypes accelerate *time-to-insight*—you can validate ROI before investing in heavier CV stacks.
 - Structured reasoning output transforms an opaque “AI says fail” into actionable, attributable justifications.
 - A clear separation of concerns (UI, vision logic, file operations) simplifies cloud migration and modular scaling.
 - Forward-looking agent/tool orchestration promises safer automation, but today’s gains are already material with careful prompt & governance design.
-
----
 
 ## 10. Summary
 
