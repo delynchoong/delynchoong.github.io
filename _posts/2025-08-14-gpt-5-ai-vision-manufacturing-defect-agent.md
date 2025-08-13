@@ -20,14 +20,6 @@ Manufacturers are under pressure to increase yield, reduce scrap, and accelerate
 
 > Outcome: Faster defect triage, lower manual inspection effort, structured reasoning artifacts to feed analytics and retraining.
 
-```mermaid
-flowchart LR
-  A[Upload Image] --> B[proccessing]
-  B --> C{Azure OpenAI GPT-5 Vision}
-  C -->|Pass| D[passed]
-  C -->|Fail| E[error]
-```
-
 ![alt text](/assets/images/2025-08-14/1.png)
 
 ---
