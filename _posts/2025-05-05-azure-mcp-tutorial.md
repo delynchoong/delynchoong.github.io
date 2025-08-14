@@ -229,3 +229,5 @@ With this setup, you can:
 - - ![alt text](/assets/images/2025-05-05/3.png)
 - Multi Server MCP and enterprise-level solutions should leverage [APIM as auth gateway to MCP](https://techcommunity.microsoft.com/blog/integrationsonazureblog/azure-api-management-your-auth-gateway-for-mcp-servers/4402690) and [MCP Plugin for Semantic Kernel](https://learn.microsoft.com/en-us/semantic-kernel/concepts/plugins/adding-mcp-plugins?pivots=programming-language-python).
 - If you prefer, you can also use virtual environments to store your environment variables.
+
+This blog is also published in [Microsoft Tech Community Blog](https://techcommunity.microsoft.com/blog/azure-ai-services-blog/mastering-model-context-protocol-mcp-building-multi-server-mcp-with-azure-openai/4424993)
