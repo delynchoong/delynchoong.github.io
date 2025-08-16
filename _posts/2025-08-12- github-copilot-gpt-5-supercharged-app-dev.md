@@ -1,5 +1,5 @@
 ---
-title: "Github Copilot GPT-5 features: Supercharged Application Development"
+title: "Github Copilot GPT-5: Supercharged Application Development"
 categories:
   - blog
 tags:
@@ -46,7 +46,9 @@ Where you might notice differences in practice:
 
 The takeaway: choose per task. It’s common to mix models—one for planning, another for polish—behind a consistent tool interface.
 
-I've been using [Claude Sonnet 3.7](https://www.anthropic.com/claude/sonnet) to power my GH Copilot previously, and now, I've switch to Gpt-5(preview) instead. While I won't go into a one-on-one comparison in this blog, nor have I fully benchmarked the difference, the new GPT-5 model impressed me with it's capability to handle complex project code and iterative debugging ![alt text](/assets/images/2025-08-12/12.png)
+I've been using [Claude Sonnet 3.7](https://www.anthropic.com/claude/sonnet) to power my GH Copilot previously, and now, I've switch to Gpt-5(preview) instead. While I won't go into a one-on-one comparison in this blog, nor have I fully benchmarked the difference, the new GPT-5 model impressed me with it's capability to handle complex project code and iterative debugging 
+
+![alt text](/assets/images/2025-08-12/12.png)
 
 ---
 
@@ -95,21 +97,26 @@ However, there are some enhancements I'd like to add to my project, also if you 
 ### Generating weather, building density and parks in the building simulator
 
 The cars are currently moving sideways, as seen here.
+
 ![alt text](/assets/images/2025-08-12/8.png)
+
 Let's take a look at the code to figure out how to rotate the car by 90 degrees.
+
 ![alt text](/assets/images/2025-08-12/7.png)
 Added formula to fix the rotation along x-axis
+
 ``` tmp.rotation.y = car.lane.dir > 0 ? -Math.PI/2 : Math.PI/2; ```
 Cars now look good
+
 ![alt text](/assets/images/2025-08-12/9.png)
 
 What to look for
 
-- Does the model propose a plan before coding? Can it explain trade-offs? how often does it check in?
+- Does the model propose a plan before coding? Can it explain trade-offs? how often does it cKheck in?
 - How well does it refactor when you request “extract building generator into a backend module”?
 - Does it keep changes minimal and stable across iterations?
 
-After a few iterations, include adding weather feaatures. This is the final results:
+After a few iterations, include adding weather features. This is the final result:
 ![alt text](/assets/images/2025-08-12/city2.gif)
 
 I kept my requirements for the simulation to be lightweight, hence GPT-5 only leveraged simple threeJS libaries for the asset creations. Check out the [City Simulator Github Repo](https://github.com/delynchoong/3D-City-Building-Simulator) to have some fun yourself.
@@ -134,7 +141,12 @@ Example prompt
 > You are an AI solution engineer. Using available MCP tools, generate a minimal customer demo for a manufacturing AI Envisioning session. Use Python FastAPI service, AI Vision capabilities at lowest cost, and a README with prerequisites and run steps. Create a IaC Bicep file for repeatable deployment. Enforce best-practice checks and stop if any critical check fails; report the failure and remediation.
 
 GPT-5 immediately reasons the steps required, and calls the [Azure MCP server to retrieve best practice recommendations](https://learn.microsoft.com/en-us/azure/developer/azure-mcp-server/tools/azure-best-practices):
+
 ![alt text](/assets/images/2025-08-12/6.png)
+
+The demo was capable of quickly detecting defects in images using the vision capability. Since I instructed the model to be cost effective, it utilized a simple GPT-4o model. Further enhancement should implement Azure AI Vision with it's own classication datasets.
+
+![alt text](/assets/images/2025-08-12/14.png)
 
 What to look for
 

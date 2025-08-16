@@ -30,3 +30,75 @@
 		<meta name="description" content="{{ page.excerpt | strip_html | normalize_whitespace | truncate: 155 }}">
 	{%- endif -%}
 {%- endif -%}
+
+	{%- comment -%}
+		Simple per-post view counter and star button using CountAPI (client-only, no auth).
+		- Views increment on page load (per path key).
+		- Stars increment on click; one star per browser via localStorage guard.
+		- Shown only on posts (detected via article:published_time meta above).
+	{%- endcomment -%}
+	<style>
+		#post-engagement { display:flex; gap:12px; align-items:center; margin:.5rem 0 1rem; flex-wrap:wrap; }
+		#post-engagement .metric { font-size:.95rem; opacity:.85; }
+		#post-engagement button { border:1px solid #ddd; background:#fff; padding:.25rem .55rem; border-radius:6px; cursor:pointer; font-size:.95rem; }
+		#post-engagement button.active { background:#ffe89a; border-color:#f0c040; }
+		#post-engagement .num { font-variant-numeric: tabular-nums; }
+		@media (prefers-color-scheme: dark) {
+			#post-engagement button { background:#222; border-color:#444; color:#eee; }
+			#post-engagement button.active { background:#5a4a00; border-color:#8a6a00; }
+		}
+	</style>
+	<script>
+		document.addEventListener('DOMContentLoaded', function() {
+			try {
+				var isPost = !!document.querySelector('meta[property="article:published_time"]');
+				if (!isPost) return;
+
+				// Namespace based on site.url (fallback to public GitHub Pages URL)
+				var nsRaw = '{{ site.url | default: "https://delynchoong.github.io" }}';
+				var ns = nsRaw.replace(/^https?:\/\//,'').replace(/\/$/,'').replace(/[^a-zA-Z0-9_.-]/g,'-');
+				var path = window.location.pathname.replace(/\/$/, '') || '/';
+				var key = encodeURIComponent(path);
+				var starKey = key + '-stars';
+				var api = 'https://api.countapi.xyz';
+
+				// Build UI container
+				var container = document.createElement('div');
+				container.id = 'post-engagement';
+				container.innerHTML = (
+					'<span class="metric" id="view-count">👁️ <span class="num">—</span></span>' +
+					'<button id="star-btn" type="button" aria-label="Star this post">⭐ <span class="num">—</span></button>'
+				);
+
+				var target = document.querySelector('.page__meta') || document.querySelector('.page__content') || document.querySelector('article');
+				if (target && target.parentNode) target.parentNode.insertBefore(container, target.nextSibling);
+				else document.body.appendChild(container);
+
+				function setView(n){ var el = container.querySelector('#view-count .num'); if (el) el.textContent = (n||0).toLocaleString(); }
+				function setStars(n){ var el = container.querySelector('#star-btn .num'); if (el) el.textContent = (n||0).toLocaleString(); }
+
+				// Load counts
+				fetch(api + '/hit/' + ns + '/' + key)
+					.then(function(r){ return r.json(); })
+					.then(function(d){ if (d && typeof d.value === 'number') setView(d.value); })
+					.catch(function(){ /* ignore */ });
+
+				fetch(api + '/get/' + ns + '/' + starKey)
+					.then(function(r){ return r.json(); })
+					.then(function(d){ setStars((d && typeof d.value === 'number') ? d.value : 0); })
+					.catch(function(){ setStars(0); });
+
+				// Star behavior (one per browser via localStorage)
+				var starredKey = 'starred:' + key;
+				var starBtn = container.querySelector('#star-btn');
+				if (localStorage.getItem(starredKey) === '1') starBtn.classList.add('active');
+				starBtn.addEventListener('click', function(){
+					if (localStorage.getItem(starredKey) === '1') return;
+					fetch(api + '/hit/' + ns + '/' + starKey)
+						.then(function(r){ return r.json(); })
+						.then(function(d){ setStars(d && typeof d.value === 'number' ? d.value : 0); localStorage.setItem(starredKey, '1'); starBtn.classList.add('active'); })
+						.catch(function(){ /* ignore */ });
+				});
+			} catch(e) { /* noop */ }
+		});
+	</script>
