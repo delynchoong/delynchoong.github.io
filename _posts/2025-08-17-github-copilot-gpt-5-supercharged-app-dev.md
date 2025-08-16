@@ -1,5 +1,5 @@
 ---
-title: "Github Copilot GPT-5: Supercharged Application Development"
+title: "Github Copilot GPT-5: Supercharging Application Development"
 categories:
   - blog
 tags:
