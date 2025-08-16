@@ -19,7 +19,7 @@ I've been testing the capabilities out over the past week and here are some inte
 This post gives a concise, practical take on the GPT-5 launch: what’s improved, how it stacks up conceptually against Anthropic’s Claude family, and three hands-on use cases you can try right now!
 
 Want to try GPT-5 quickly? Use [Copilot Chat](https://m365.cloud.microsoft/chat/?fromcode=m365copilot) to switch to the newest model
-
+![alt text](/assets/images/2025-08-12/13.png)
 
 ## What’s new in GPT-5 (at a glance)
 
@@ -71,7 +71,7 @@ Suggested prompt
 
 ![alt text](/assets/images/2025-08-12/tetris.gif)
 
-- GPT-5 coded a single `index.html` you can drop into the repo, or just use the existing `tetris.html` in this site (see: {{ site.baseurl }}/assets/data/tetris/html).
+- GPT-5 coded a single `index.html` you can drop into the repo, or just use the existing `tetris.html` in this site (see: {{ site.baseurl }}/assets/data/tetris.html).
 - Iterate: request smaller functions, clearer collision logic, and tweak gravity/levels.
 
 Why it’s useful
