@@ -10,7 +10,8 @@ tags:
   - AI
 ---
 
-![alt text](/assets/images/2025-08-12/15.png)
+![alt text](/assets/images/2025-08-17/15.png)
+
 It's been one week since the grand release of [OpenAI's GPT-5 model](https://openai.com/gpt-5/). What does this mean for their partner, Microsoft? Similar to the past few releases, GPT-5 is available same day in [Microsoft products like M365 Copilot, AI Foundry and Github Copilot](https://news.microsoft.com/source/features/ai/openai-gpt-5/), enhancing productivity and efficiency.
 
 I've been testing the capabilities out over the past week and here are some interesting projects that I've coded in my trusty Github Copilot GPT-5 Agent mode.
@@ -18,7 +19,7 @@ I've been testing the capabilities out over the past week and here are some inte
 This post gives a concise, practical take on the GPT-5 launch: what’s improved, how it stacks up conceptually against Anthropic’s Claude family, and three hands-on use cases you can try right now!
 
 Want to try GPT-5 quickly? Use [Copilot Chat](https://m365.cloud.microsoft/chat/?fromcode=m365copilot) to switch to the newest model
-![alt text](/assets/images/2025-08-12/13.png)
+![alt text](/assets/images/2025-08-17/13.png)
 
 ## What’s new in GPT-5 (at a glance)
 
@@ -49,14 +50,14 @@ The takeaway: choose per task. It’s common to mix models—one for planning, a
 
 I've been using [Claude Sonnet 3.7](https://www.anthropic.com/claude/sonnet) to power my GH Copilot previously, and now, I've switch to Gpt-5(preview) instead. While I won't go into a one-on-one comparison in this blog, nor have I fully benchmarked the difference, the new GPT-5 model impressed me with it's capability to handle complex project code and iterative debugging 
 
-![alt text](/assets/images/2025-08-12/12.png)
+![alt text](/assets/images/2025-08-17/12.png)
 
 ---
 
 ## Use Case 0.1 Everyone's favourite test
 
 Firstly, I did a basic litmus test for all LLM models - the infamous B test in [Azure AI Foundry](https://azure.microsoft.com/en-us/blog/gpt-5-in-azure-ai-foundry-the-future-of-ai-apps-and-agents-starts-here/) for brevity's sake.
-![alt text](/assets/images/2025-08-12/11.png)
+![alt text](/assets/images/2025-08-17/11.png)
 
 No problems here. Now on to more challenging tasks.
 
@@ -68,7 +69,7 @@ Suggested prompt
 
 > Generate a minimal Tetris in one HTML file using JavaScript and Canvas. Keep it under ~200 lines, with arrow keys, rotation, pause function, and game over state.
 
-![alt text](/assets/images/2025-08-12/tetris.gif)
+![alt text](/assets/images/2025-08-17/tetris.gif)
 
 - GPT-5 coded a single `index.html` you can drop into the repo, or just use the existing `tetris.html` in this site (see: {{ site.baseurl }}/assets/data/tetris/html).
 - Iterate: request smaller functions, clearer collision logic, and tweak gravity/levels.
@@ -88,10 +89,10 @@ Suggested prompt
 
 Let's see how the agent is able to build from a simple 2 line prompt.
 
-![alt text](/assets/images/2025-08-12/city1.gif)
+![alt text](/assets/images/2025-08-17/city1.gif)
 
 The first iteration is not too bad. Also note the plan the model generates before executing coding tasks:
-![alt text](/assets/images/2025-08-12/10.png)
+![alt text](/assets/images/2025-08-17/10.png)
 
 However, there are some enhancements I'd like to add to my project, also if you noticed, the cars are positioned incorrectly. Let's fix that and also add more parks, weather options and light source simulation.
 
@@ -99,17 +100,17 @@ However, there are some enhancements I'd like to add to my project, also if you 
 
 The cars are currently moving sideways, as seen here.
 
-![alt text](/assets/images/2025-08-12/8.png)
+![alt text](/assets/images/2025-08-17/8.png)
 
 Let's take a look at the code to figure out how to rotate the car by 90 degrees.
 
-![alt text](/assets/images/2025-08-12/7.png)
+![alt text](/assets/images/2025-08-17/7.png)
 Added formula to fix the rotation along x-axis
 
 ``` tmp.rotation.y = car.lane.dir > 0 ? -Math.PI/2 : Math.PI/2; ```
 Cars now look good
 
-![alt text](/assets/images/2025-08-12/9.png)
+![alt text](/assets/images/2025-08-17/9.png)
 
 What to look for
 
@@ -118,7 +119,7 @@ What to look for
 - Does it keep changes minimal and stable across iterations?
 
 After a few iterations, include adding weather features. This is the final result:
-![alt text](/assets/images/2025-08-12/city2.gif)
+![alt text](/assets/images/2025-08-17/city2.gif)
 
 I kept my requirements for the simulation to be lightweight, hence GPT-5 only leveraged simple threeJS libaries for the asset creations. Check out the [City Simulator Github Repo](https://github.com/delynchoong/3D-City-Building-Simulator) to have some fun yourself.
 
@@ -143,11 +144,11 @@ Example prompt
 
 GPT-5 immediately reasons the steps required, and calls the [Azure MCP server to retrieve best practice recommendations](https://learn.microsoft.com/en-us/azure/developer/azure-mcp-server/tools/azure-best-practices):
 
-![alt text](/assets/images/2025-08-12/6.png)
+![alt text](/assets/images/2025-08-17/6.png)
 
 The demo was capable of quickly detecting defects in images using the vision capability. Since I instructed the model to be cost effective, it utilized a simple GPT-4o model. Further enhancement should implement Azure AI Vision with it's own classication datasets.
 
-![alt text](/assets/images/2025-08-12/14.png)
+![alt text](/assets/images/2025-08-17/14.png)
 
 What to look for
 
