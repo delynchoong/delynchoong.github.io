@@ -27,5 +27,7 @@
 		Optional: description fallback if none provided (jekyll-seo-tag normally covers this)
 	{%- endcomment -%}
 	{%- if page.excerpt and page.excerpt != '' and page.excerpt != site.description -%}
-		<meta name="description" content="{{ page.excerpt | strip_html | normalize_whitespace | truncate: 155 }}">
+		<meta name="description" content="{{ page.excerpt | strip_html | strip_newlines | truncate: 155 }}">
 	{%- endif -%}
+{%- endif -%}
+
