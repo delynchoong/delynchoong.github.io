@@ -160,7 +160,7 @@ Explore the [real-time manufacturing defect detection repo](https://github.com/d
 
 ### Future Enhancements
 
-Looking ahead, I plan to evolve this PO by integrating advanced agentic capabilities. This includes adding dedicated storage solutions to persist data and state across sessions, which will enable more complex workflows and richer user experiences. Additionally, I aim to extend the application into a multi-agent system, where multiple AI agents can collaborate or specialize in different tasks to unlock new possibilities for intelligent automation and decision support within the app.
+Looking ahead, I plan to evolve this POC by integrating advanced agentic capabilities. This includes adding dedicated storage solutions to persist data and state across sessions, which will enable more complex workflows and richer user experiences. Additionally, I aim to extend the application into a multi-agent system, where multiple AI agents can collaborate or specialize in different tasks to unlock new possibilities for intelligent automation and decision support within the app.
 
 ## Final tips
 
